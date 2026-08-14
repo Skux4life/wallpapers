@@ -55,6 +55,7 @@ if [[ -f /etc/os-release ]]; then
       ;;
     *)
       echo "Unknown distro: $ID"
+      exit 1
       ;;
   esac
 fi
@@ -88,13 +89,10 @@ case "$mode" in
     ;;
 esac
 
-pkill -x hyprpaper || true
-sleep 0.5
-hyprpaper &
-
-# Potential Pop OS way
-# CONFIG_FILE="$HOME/.config/cosmic/com.system76.CosmicBackground/v1/all"
-# back it up first, since you're hand-editing a config file
-# cp "$CONFIG_FILE" "$CONFIG_FILE.bak"
-# replace the image path inside the RON structure (Rusty Object Notation)
-# sed -i "s|source: Path(\".*\")|source: Path(\"$NEW_WALLPAPER\")|" "$CONFIG_FILE"
+if [[ $ID == "arch" ]]; then
+  pkill -x hyprpaper || true
+  sleep 0.5
+  hyprpaper &
+elif [[ $ID == "pop" ]]; then
+  killall cosmic-bg
+fi
